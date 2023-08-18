@@ -19,10 +19,10 @@ function Home(){
 
             <div className="box">
 
-                <h1>To - List</h1>
+                <h1 className="heading">To - List</h1>
 
                 <input className="todoItem" placeholder="To do"></input>
-                <button className="sub" onClick={handleClick}>+</button>
+                <button className="sub" onClick={handleClick}>Add</button>
                 <h1>{item}</h1>
             </div>
         </>   
