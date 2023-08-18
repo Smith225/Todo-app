@@ -1,37 +1,57 @@
-const express= require("express");
-const Todo= require("../schema/todo.js");
+const express = require("express");
+const Todo = require("../schema/todo.js");
 
-const router= express.Router();
+const router = express.Router();
 
-router.post("/create", async function(req, res){
+router.post("/create", async function (req, res) {
 
-    const newTodo= new Todo({
-        work: req.body.work,
-        tag: req.body.tag        
-    });
+    try {
+        const newTodo = new Todo({
+            work: req.body.work,
+            tag: req.body.tag
+        });
 
-    await newTodo.save();
-    
-    res.send(newTodo);
-    console.log(newTodo);
-})
+        await newTodo.save();
 
+        res.send(newTodo);
+        // console.log(newTodo);
 
-router.get("/get", async function(req, res){
-
-    const total= await Todo.find();
-
-    res.send(total);
-    console.log(total);
+    }
+    catch (error) {
+        console.log(error);
+        res.send(error);
+    }
 });
 
-router.delete("/delete", async function(req, res){
 
-    const item= await Todo.findByIdAndDelete(req.body.id);
+router.get("/get", async function (req, res) {
 
-    res.send(item);
-    console.log(item);
-})
+    try {
+        const total = await Todo.find().select("-__v -date");
+
+        res.send(total);
+        // console.log(total);    
+    }
+    catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+});
 
 
-module.exports= router;
+router.delete("/delete", async function (req, res) {
+
+    try {
+        const item = await Todo.findByIdAndDelete(req.body.id);
+
+        res.send(item);
+        // console.log(item);
+    }
+    catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+});
+
+
+module.exports = router;

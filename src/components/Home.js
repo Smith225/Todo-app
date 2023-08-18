@@ -1,18 +1,99 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function Home(){
+function Home() {
 
-    const [item, setItem]= useState("");
+    const [todo, setTodo] = useState({
+        work: "",
+        tag: ""
+    });
+
+    const [collection, setCollection] = useState([]);
+
+    const { work, tag } = todo;
 
 
-    function handleClick(){
 
-        const ele= document.getElementsByClassName("todoItem");
-        console.log(ele[0].value);
-        setItem(ele[0].value);
+    async function getTodo() {
+
+        const url = "http://localhost:5000/api/todo/get";
+
+        const response = await fetch(url, {
+            method: "GET",
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        setCollection(data);
     }
 
-    return(
+
+    async function addTodo() {
+
+        const url = "http://localhost:5000/api/todo/create";
+
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ work: work, tag: tag })
+        }
+
+        const response = await fetch(url, options)
+
+
+        const data = await response.json();
+        console.log(data);
+
+        getTodo();
+    }
+
+    async function deleteTodo(id){
+
+        const url= "http://localhost:5000/api/todo/delete";
+
+        const response= await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id: id})
+        })
+    
+        console.log(response);
+
+        getTodo();
+    } 
+
+
+    function handleChange(e) {
+
+        const value = e.target.value;
+        setTodo({
+            work: value,
+            tag: "General"
+        });
+    }
+
+    function handleAdd() {
+        addTodo();
+    }
+
+    function handleDelete(e){
+        
+        console.log(e.target.value)
+        deleteTodo(e.target.value);
+
+        e.target.checked= false;
+    }
+
+    useEffect(function () {
+        getTodo();
+    }, [])
+
+
+    return (
         <>
 
             <link rel="stylesheet" href={require("../css/styles.css")} />
@@ -20,12 +101,22 @@ function Home(){
             <div className="box">
 
                 <h1 className="heading">To - List</h1>
+                <p className="instruct">(Click Add button to add todo task and click on checkbox to remove respective task.)</p>
 
-                <input className="todoItem" placeholder="To do"></input>
-                <button className="sub" onClick={handleClick}>Add</button>
-                <h1>{item}</h1>
+                <input className="todoItem" onChange={handleChange} placeholder="To do"></input>
+                <button className="sub" onClick={handleAdd}>Add</button>
+
+                {collection.map((element, index) => {
+
+                    return <div key={index}>
+                            <p> 
+                            <input type="checkbox" className="check" onClick={handleDelete} value={element._id} />
+                                {element.work}</p>
+                            </div>
+                })}
+
             </div>
-        </>   
+        </>
     )
 }
 
