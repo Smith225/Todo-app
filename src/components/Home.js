@@ -1,10 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import AlertContext from "../context - alert/AlertContext";
 
 function Home() {
 
+    const context = useContext(AlertContext);
+
+    const { getAlert } = context;
+
     const [todo, setTodo] = useState({
         work: "",
-        tag: ""
+        tag: "General"
     });
 
     const [collection, setCollection] = useState([]);
@@ -46,33 +51,54 @@ function Home() {
         const data = await response.json();
         console.log(data);
 
+        getAlert("Todo task added to list.", "#188f18");
+
+        setTodo({
+            work: "",
+            tag: ""
+        });
+
         getTodo();
     }
 
-    async function deleteTodo(id){
+    async function deleteTodo(id) {
 
-        const url= "http://localhost:5000/api/todo/delete";
+        const url = "http://localhost:5000/api/todo/delete";
 
-        const response= await fetch(url, {
+        const response = await fetch(url, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({id: id})
+            body: JSON.stringify({ id: id })
         })
-    
+
         console.log(response);
 
+        getAlert("Todo task deleted from list.", "#be0f0f");
+
         getTodo();
-    } 
+    }
 
 
     function handleChange(e) {
 
-        const value = e.target.value;
-        setTodo({
-            work: value,
-            tag: "General"
+        const name = e.target.name;
+        const newValue = e.target.value;
+
+        setTodo(function (prevValue) {
+            if (name === "work") {
+                return {
+                    work: newValue,
+                    tag: prevValue.tag
+                }
+            }
+            else {
+                return {
+                    work: prevValue.work,
+                    tag: newValue
+                }
+            }
         });
     }
 
@@ -80,12 +106,11 @@ function Home() {
         addTodo();
     }
 
-    function handleDelete(e){
-        
-        console.log(e.target.value)
+    function handleDelete(e) {
+
         deleteTodo(e.target.value);
 
-        e.target.checked= false;
+        e.target.checked = false;
     }
 
     useEffect(function () {
@@ -103,16 +128,25 @@ function Home() {
                 <h1 className="heading">To - List</h1>
                 <p className="instruct">(Click Add button to add todo task and click on checkbox to remove respective task.)</p>
 
-                <input className="todoItem" onChange={handleChange} placeholder="To do"></input>
+                <input className="todoItem" name="work" value={todo.work} onChange={handleChange} placeholder="To do" />
+
+
+                <select className="drop" name="tag" onChange={handleChange}>
+                    <option>General</option>
+                    <option>Personal</option>
+                    <option>Professional</option>
+                    <option>Other</option>
+                </select>
+
                 <button className="sub" onClick={handleAdd}>Add</button>
 
                 {collection.map((element, index) => {
 
                     return <div key={index}>
-                            <p> 
+                        <p>
                             <input type="checkbox" className="check" onClick={handleDelete} value={element._id} />
-                                {element.work}</p>
-                            </div>
+                            {element.work} - {element.tag}</p>
+                    </div>
                 })}
 
             </div>

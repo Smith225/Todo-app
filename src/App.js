@@ -6,6 +6,8 @@ import {
   Route
 } from "react-router-dom"
 import Home from './components/Home';
+import Alert from "./components/Alert.js";
+import AlertState from "./context - alert/AlertState";
 
 function App() {
 
@@ -13,13 +15,17 @@ function App() {
   return (
     <>
 
-      <Router>
-        <Routes>
+      <AlertState>
+        <Router>
 
-          <Route path="/" element={<Home />} />
+          <Alert/>
+          <Routes>
 
-        </Routes>
-      </Router>
+            <Route path="/" element={<Home />} />
+
+          </Routes>
+        </Router>
+      </AlertState>
 
     </>
   );
