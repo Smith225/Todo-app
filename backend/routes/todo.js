@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.post("/create", async function (req, res) {
 
+    let success= false;
+
     try {
         const newTodo = new Todo({
             work: req.body.work,
@@ -13,43 +15,50 @@ router.post("/create", async function (req, res) {
 
         await newTodo.save();
 
-        res.send(newTodo);
+        success= true;
+        res.json({success, newTodo});
         // console.log(newTodo);
 
     }
     catch (error) {
         console.log(error);
-        res.send(error);
+        res.json({success, error});
     }
 });
 
 
 router.get("/get", async function (req, res) {
 
+    let success= false;
+
     try {
         const total = await Todo.find().select("-__v -date");
 
-        res.send(total);
+        success= true;
+        res.json({success, total});
         // console.log(total);    
     }
     catch (error) {
         console.log(error);
-        res.send(error);
+        res.json({success, error});
     }
 });
 
 
 router.delete("/delete", async function (req, res) {
 
+    let success= false;
+
     try {
         const item = await Todo.findByIdAndDelete(req.body.id);
 
-        res.send(item);
+        success= true;
+        res.json({success, item});
         // console.log(item);
     }
     catch (error) {
         console.log(error);
-        res.send(error);
+        res.json({success, error});
     }
 });
 

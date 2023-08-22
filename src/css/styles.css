@@ -1,6 +1,7 @@
 .box {
+    background-color: #FFF;
     margin: 4em auto;
-    border: solid 2px gray;
+    border: solid 1px;
     border-radius: 10px;
     width: 50%;
     padding: 2% 2%;
@@ -23,7 +24,7 @@
     border-radius: 10px;
     padding: 10px;
     width: 50%;
-    border: solid 1px red;
+    border: solid 1px #1359ba;
     margin-bottom: 1em;
 }
 
@@ -32,6 +33,7 @@
     margin-left: 1em;
     margin-right: 2em;
     padding: 2px;
+    cursor: pointer;
 }
 
 .sub {
@@ -39,8 +41,14 @@
     padding: 12px;
     border: solid 2px green;
     border-radius: 100%;
+    cursor: pointer;
 }
 
 .check {
     margin-right: 10px; 
+    cursor: pointer;
+}
+
+.tag {
+    color: green;
 }

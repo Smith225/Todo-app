@@ -29,7 +29,12 @@ function Home() {
         const data = await response.json();
         console.log(data);
 
-        setCollection(data);
+        if (data.success) {
+            setCollection(data.total);
+        }
+        else {
+            console.log(data.error);
+        }
     }
 
 
@@ -53,9 +58,11 @@ function Home() {
 
         getAlert("Todo task added to list.", "#188f18");
 
-        setTodo({
-            work: "",
-            tag: ""
+        setTodo(function(prevValue){
+            return {
+                work: "",
+                tag: prevValue.tag
+            }
         });
 
         getTodo();
@@ -102,7 +109,8 @@ function Home() {
         });
     }
 
-    function handleAdd() {
+    function handleAdd(e) {
+        e.preventDefault();
         addTodo();
     }
 
@@ -128,26 +136,33 @@ function Home() {
                 <h1 className="heading">To - List</h1>
                 <p className="instruct">(Click Add button to add todo task and click on checkbox to remove respective task.)</p>
 
-                <input className="todoItem" name="work" value={todo.work} onChange={handleChange} placeholder="To do" />
+                <form onSubmit={handleAdd} >
+                    <input className="todoItem" name="work" value={todo.work} onChange={handleChange} placeholder="To do" autoComplete="off" minLength={8} required />
 
 
-                <select className="drop" name="tag" onChange={handleChange}>
-                    <option>General</option>
-                    <option>Personal</option>
-                    <option>Professional</option>
-                    <option>Other</option>
-                </select>
+                    <select className="drop" name="tag" onChange={handleChange}>
+                        <option>General</option>
+                        <option>Personal</option>
+                        <option>Professional</option>
+                        <option>Other</option>
+                    </select>
 
-                <button className="sub" onClick={handleAdd}>Add</button>
+                    <button className="sub">Add</button>
+                </form>
 
                 {collection.map((element, index) => {
 
                     return <div key={index}>
                         <p>
                             <input type="checkbox" className="check" onClick={handleDelete} value={element._id} />
-                            {element.work} - {element.tag}</p>
+                            {element.work} - <span className="tag">{element.tag}</span>
+                        </p>
                     </div>
                 })}
+
+                {collection.length === 0 &&
+                    <p>Your to-do tasks will display here..</p>
+                }
 
             </div>
         </>
