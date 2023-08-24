@@ -63,4 +63,21 @@ router.delete("/delete", async function (req, res) {
 });
 
 
+router.delete("/deleteAll", function(req, res){
+
+    let success= false;
+
+    try {
+        success= true;
+
+        Todo.collection.drop();
+        res.json({success, msg: "Successfully deleted all the todo's from the list."});        
+    } 
+    catch (error) {
+        console.log(error);
+        res.json({success, error: "Internal server error."});        
+    }
+});
+
+
 module.exports = router;

@@ -38,7 +38,7 @@
 
 .sub {
     font-weight: bold;
-    padding: 12px;
+    padding: 12px 18px;
     border: solid 2px green;
     border-radius: 100%;
     cursor: pointer;
@@ -51,4 +51,15 @@
 
 .tag {
     color: green;
+}
+
+.sub:hover {
+    background-color: #0b5046;
+    color: #FFF;
+}
+
+.empty {
+    border-radius: 10px;
+    padding: 10px;
+    float: right;
 }

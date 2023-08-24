@@ -58,7 +58,7 @@ function Home() {
 
         getAlert("Todo task added to list.", "#188f18");
 
-        setTodo(function(prevValue){
+        setTodo(function (prevValue) {
             return {
                 work: "",
                 tag: prevValue.tag
@@ -85,6 +85,27 @@ function Home() {
         getAlert("Todo task deleted from list.", "#be0f0f");
 
         getTodo();
+    }
+
+    async function deleteAll(){
+
+        const url= "http://localhost:5000/api/todo/deleteAll";
+
+        const response= await fetch(url, {
+            method: "DELETE"
+        });
+
+        const data= await response.json();
+
+        console.log(data);
+        if(data.success)
+        {
+            setCollection([]);
+        }
+        else
+        {
+            console.log(data.error);
+        }
     }
 
 
@@ -119,6 +140,10 @@ function Home() {
         deleteTodo(e.target.value);
 
         e.target.checked = false;
+    }
+
+    function handleEmpty(){
+        deleteAll();
     }
 
     useEffect(function () {
@@ -163,6 +188,11 @@ function Home() {
                 {collection.length === 0 &&
                     <p>Your to-do tasks will display here..</p>
                 }
+
+                {collection.length !== 0 &&
+                    <button className="sub empty" onClick={handleEmpty}>Empty To-do List</button>
+                }
+
 
             </div>
         </>

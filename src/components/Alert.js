@@ -11,7 +11,7 @@ function Alert() {
 
     setTimeout(function () {
         getAlert("", "");
-    }, 4000);
+    }, 8000);
 
     return (
         <>
